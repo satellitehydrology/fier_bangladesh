@@ -30,7 +30,7 @@ with row1_col2:
         # lAT / LONG
         station = st.selectbox(
      'Determine station:',
-     ('SW72','uwu' ),
+     ('SW72','New_Station' ),
      )
 
         resolution = st.select_slider(
