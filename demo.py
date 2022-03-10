@@ -111,7 +111,7 @@ with row1_col2:
 
 
 with row1_col1:
-    folium_static(m, height = 600, width = 800)
+    folium_static(m, height = 600, width = 900)
     st.markdown(
     """
     Reference: Chang, C. H., Lee, H., Kim, D., Hwang, E., Hossain, F., Chishtie, F., ... & Basnayake, S. (2020). Hindcast and forecast of daily inundation extents using satellite SAR and altimetry data with rotated empirical orthogonal function analysis: Case study in Tonle Sap Lake Floodplain. Remote Sensing of Environment, 241, 111732.
