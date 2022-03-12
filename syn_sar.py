@@ -21,6 +21,7 @@ def synthesize_sar(site, value,):
 
     sm_mode = 'RSM/%s/RSM_hydro.nc'%(site)
     RSM = xr.open_dataset(root_output_folder + sm_mode)
+
     for ct_mode in range(len(RSM.mode.values)):
         sm = RSM.spatial_modes.values[:,:,ct_mode]
         est_tpc = tpc_predict(site, ct_mode + 1, value)
@@ -49,17 +50,16 @@ def synthesize_sar(site, value,):
 
     # Inundation Map
 
-    aoi_indx = np.argwhere(~np.isnan(RSM.spatial_modes.values))
+    # aoi_indx = np.argwhere(~np.isnan(dry_meanVV))
     water_indx = np.argwhere( z_score_img < zscore_threshold )
-    water_map = np.empty((z_score_img.shape[0], z_score_img.shape[1]))
-    water_map[:] = np.nan
-    water_map[aoi_indx[:,0], aoi_indx[:,1]] = 0
+    water_map = np.zeros((syn_sar.shape[0], syn_sar.shape[1]))
+    # water_map[aoi_indx[:,0], aoi_indx[:,1]] = 0
     water_map[water_indx[:,0], water_indx[:,1]] = 1
 
     # water_map = z_score_img.copy()
-    # water_map[water_map < zscore_threshold] = 1
-    # water_map[water_map >= zscore_threshold] = 0
-    
+    # water_map[z_score_img < zscore_threshold] = 1
+    # water_map[z_score_img >= zscore_threshold] = 0
+
     return syn_sar, z_score_img, water_map
 
 def image_output(site, value):
@@ -71,17 +71,17 @@ def image_output(site, value):
 
         fig = plt.imshow(sar_image, cmap='gray')
         plt.axis('off')
-        plt.savefig(folder_name +'/syn_sar.png', bbox_inches='tight', dpi=300)
+        plt.savefig(folder_name +'/syn_sar.png', bbox_inches='tight', dpi=300, pad_inches = 0)
 
         fig = plt.imshow(z_score_image, cmap='jet', vmin=-3, vmax=3, interpolation='None')
-        plt.savefig(folder_name +'/z_score.png', bbox_inches='tight', dpi=300)
+        plt.savefig(folder_name +'/z_score.png', bbox_inches='tight', dpi=300, pad_inches = 0)
         print('Created', folder_name)
 
         water_cmap =  matplotlib.colors.ListedColormap(["silver","darkblue"])
         fig = plt.imshow(water_map_image, cmap = water_cmap)
         plt.clim(vmin=-0.5, vmax=1.5)
         plt.axis('off')
-        plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None')
+        plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None', pad_inches = 0)
 
     else:
         print(folder_name,'existed')

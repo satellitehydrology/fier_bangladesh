@@ -22,6 +22,7 @@ with row1_col1:
     )
     plugins.Fullscreen(position='topright').add_to(m)
     folium.TileLayer('Stamen Terrain').add_to(m)
+    m.add_child(folium.LatLngPopup())
     folium.LayerControl().add_to(m)
 
 with row1_col2:
@@ -33,10 +34,10 @@ with row1_col2:
      ('SW72','New_Station' ),
      )
 
-        resolution = st.select_slider(
-     'Select resolution',
-     options=['100m','500m',],
-     )
+     #    resolution = st.select_slider(
+     # 'Select resolution',
+     # options=['100m','500m',],
+     # )
 
         lw = st.number_input("Water level:",
         value = 5.0,
@@ -51,10 +52,10 @@ with row1_col2:
             if station == 'SW72':
 
                 st.write('Station: ',station)
-                st.write('resolution: ',resolution)
+                # st.write('resolution: ',resolution)
                 st.write('Water level (m): %.3f'%(lw))
 
-                location = [24.3, 91]
+                location = [24.81, 91.12]
                 m = folium.Map(
                     zoom_start = 9,
                     location = location,
@@ -107,6 +108,7 @@ with row1_col2:
 
                 plugins.Fullscreen(position='topright').add_to(m)
                 folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
                 folium.LayerControl().add_to(m)
 
 
