@@ -50,11 +50,13 @@ def synthesize_sar(site, value,):
 
     # Inundation Map
 
-    # aoi_indx = np.argwhere(~np.isnan(dry_meanVV))
+    aoi_indx = np.argwhere(~np.isnan(dry_meanVV))
     water_indx = np.argwhere( z_score_img < zscore_threshold )
-    water_map = np.zeros((syn_sar.shape[0], syn_sar.shape[1]))
-    # water_map[aoi_indx[:,0], aoi_indx[:,1]] = 0
+    water_map = np.empty((syn_sar.shape[0], syn_sar.shape[1]))
+    water_map[:] = np.nan
+    water_map[aoi_indx[:,0], aoi_indx[:,1]] = 0
     water_map[water_indx[:,0], water_indx[:,1]] = 1
+    # water_map[water_map == 2] = np.nan
 
     # water_map = z_score_img.copy()
     # water_map[z_score_img < zscore_threshold] = 1
@@ -78,10 +80,33 @@ def image_output(site, value):
         print('Created', folder_name)
 
         water_cmap =  matplotlib.colors.ListedColormap(["silver","darkblue"])
+        water_cmap.set_bad('silver')
         fig = plt.imshow(water_map_image, cmap = water_cmap)
-        plt.clim(vmin=-0.5, vmax=1.5)
+        plt.clim(vmin=0, vmax=1)
         plt.axis('off')
         plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None', pad_inches = 0)
+
+        # Make nc file:
+        all_meanVV_dir = 'stats_img/%s/all_meanVV.nc'%(site)
+        all_meanVV = xr.open_dataset(root_output_folder + all_meanVV_dir)
+        out_file = xr.Dataset(
+            {
+                "Synthesized SAR Image": (
+                    all_meanVV.dims,
+                    sar_image
+                                ),
+                "Z-score Image": (
+                    all_meanVV.dims,
+                    z_score_image,
+                                 ),
+                "Inundation Map": (
+                    all_meanVV.dims,
+                    water_map_image,
+                         ),
+            },
+            coords = all_meanVV.coords,
+        )
+        out_file.to_netcdf(folder_name +'/output.nc')
 
     else:
         print(folder_name,'existed')

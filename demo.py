@@ -113,6 +113,16 @@ with row1_col2:
                 m.add_child(folium.LatLngPopup())
                 folium.LayerControl().add_to(m)
 
+    try:
+        with open('output/' + str(station) + '_%.2f'%(float(lw)) +'/output.nc', 'rb') as f:
+            st.download_button('Download Latest Run Output',
+            f,
+            file_name=str(station) + '_%.2f'%(float(lw)) +'_output.nc',
+            mime= "application/netcdf")
+    except:
+        pass
+
+
 
 with row1_col1:
     folium_static(m, height = 600, width = 900)
