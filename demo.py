@@ -38,10 +38,12 @@ with row1_col2:
      # 'Select resolution',
      # options=['100m','500m',],
      # )
-
+        st.write('Input water level between 0 and 7.4 m')
         lw = st.number_input("Water level:",
         value = 5.0,
-        format = '%.3f'
+        format = '%.2f',
+        min_value = 0.0,
+        max_value = 7.4,
         )
 
 
@@ -53,7 +55,7 @@ with row1_col2:
 
                 st.write('Station: ',station)
                 # st.write('resolution: ',resolution)
-                st.write('Water level (m): %.3f'%(lw))
+                st.write('Water level (m): %.2f'%(lw))
 
                 location = [24.81, 91.12]
                 m = folium.Map(
@@ -114,8 +116,6 @@ with row1_col2:
 
 with row1_col1:
     folium_static(m, height = 600, width = 900)
-    st.markdown(
-    """
-    Reference: Chang, C. H., Lee, H., Kim, D., Hwang, E., Hossain, F., Chishtie, F., ... & Basnayake, S. (2020). Hindcast and forecast of daily inundation extents using satellite SAR and altimetry data with rotated empirical orthogonal function analysis: Case study in Tonle Sap Lake Floodplain. Remote Sensing of Environment, 241, 111732.
-    """
-    )
+    st.write('Disclaimer: This is a test version of FIER method for Bangladesh')
+    url = "https://www.sciencedirect.com/science/article/pii/S0034425720301024?casa_token=kOYlVMMWkBUAAAAA:fiFM4l6BUzJ8xTCksYUe7X4CcojddbO8ybzOSMe36f2cFWEXDa_aFHaGeEFlN8SuPGnDy7Ir8w"
+    st.write("Reference: [Chang, C. H., Lee, H., Kim, D., Hwang, E., Hossain, F., Chishtie, F., ... & Basnayake, S. (2020). Hindcast and forecast of daily inundation extents using satellite SAR and altimetry data with rotated empirical orthogonal function analysis: Case study in Tonle Sap Lake Floodplain. Remote Sensing of Environment, 241, 111732.](%s)" % url)

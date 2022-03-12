@@ -64,7 +64,7 @@ def synthesize_sar(site, value,):
 
 def image_output(site, value):
 
-    folder_name = 'output/' + site + '_%.3f'%(value)
+    folder_name = 'output/' + site + '_%.2f'%(value)
     if not os.path.isdir(folder_name):
         os.makedirs(folder_name)
         sar_image, z_score_image, water_map_image = synthesize_sar(site, round(value,3))
