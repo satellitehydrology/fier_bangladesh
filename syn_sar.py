@@ -86,7 +86,7 @@ def image_output(site, value):
         fig = plt.imshow(water_map_image, cmap = water_cmap)
         plt.clim(vmin=0, vmax=1)
         plt.axis('off')
-        plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None', pad_inches = 0)
+        plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None') #, pad_inches = 0)
         #plt.show()
         
         # Make nc file:
