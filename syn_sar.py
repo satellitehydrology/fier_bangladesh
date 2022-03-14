@@ -87,7 +87,7 @@ def image_output(site, value):
         plt.clim(vmin=-0.5, vmax=1.5)
         plt.axis('off')
         plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None', pad_inches = 0)
-        plt.show()
+        #plt.show()
         
         # Make nc file:
         all_meanVV_dir = 'stats_img/%s/all_meanVV.nc'%(site)
