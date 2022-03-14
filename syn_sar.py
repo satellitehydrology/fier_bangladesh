@@ -84,7 +84,7 @@ def image_output(site, value):
         water_cmap =  matplotlib.colors.ListedColormap(["silver","darkblue"])
         #water_cmap.set_bad('silver')
         fig = plt.imshow(water_map_image, cmap = water_cmap)
-        plt.clim(vmin=-0.5, vmax=1.5)
+        plt.clim(vmin=0, vmax=1)
         plt.axis('off')
         plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None', pad_inches = 0)
         #plt.show()
