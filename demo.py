@@ -4,6 +4,14 @@ import streamlit as st
 from streamlit_folium import folium_static
 import xarray as xr
 from syn_sar import *
+import numpy.ma as ma
+
+
+def colorize(data, cmap='viridis'):
+    array = ma.masked_invalid(data)
+    normed_data = (array - array.min()) / (array.max() - array.min())
+    cm = plt.cm.get_cmap(cmap)
+    return cm(array)
 
 # Page Configuration
 st.set_page_config(layout="wide")
@@ -81,18 +89,26 @@ with row1_col2:
 
                 # Add SYN_SAR Image
                 image_folder = image_output(station, float(lw))
+                output =  xr.open_dataset(image_folder +'/output.nc',)
+                sar_image, z_score_image, water_map_image = output['Synthesized SAR Image'].values, output['Z-score Image'].values, output['Inundation Map'].values
+
+                water_cmap =  matplotlib.colors.ListedColormap(["silver","darkblue"])
+                water_map_image =  colorize(water_map_image, water_cmap)
+
 
                 folium.raster_layers.ImageOverlay(
                     image= image_folder +'/syn_sar.png',
+                    # image = sar_image,
                     bounds = bounds,
                     opacity = 0.5,
                     name = 'Synthesized Sar Image_' + station + '_' + str(lw),
-                    show = False
+                    show = False,
                 ).add_to(m)
 
                 # Add Z_SCORE
                 folium.raster_layers.ImageOverlay(
                     image= image_folder +'/z_score.png',
+                    # image = z_score_image,
                     bounds = bounds,
                     opacity = 0.5,
                     name = 'Z-score Image_' + station + '_' + str(lw),
@@ -101,9 +117,10 @@ with row1_col2:
 
                 # Add Inundation
                 folium.raster_layers.ImageOverlay(
-                    image= image_folder +'/water_map.png',
+                    # image= image_folder +'/water_map.png',
+                    image = water_map_image,
                     bounds = bounds,
-                    opacity = 0.5,
+                    opacity = 0.7,
                     name = 'Inundation Map_' + station + '_' + str(lw),
                     show = True
                 ).add_to(m)
@@ -112,6 +129,7 @@ with row1_col2:
                 folium.TileLayer('Stamen Terrain').add_to(m)
                 m.add_child(folium.LatLngPopup())
                 folium.LayerControl().add_to(m)
+                output.close()
 
     try:
         with open('output/' + str(station) + '_%.2f'%(float(lw)) +'/output.nc', 'rb') as f:
@@ -119,8 +137,12 @@ with row1_col2:
             f,
             file_name=str(station) + '_%.2f'%(float(lw)) +'_output.nc',
             mime= "application/netcdf")
+
+
+
     except:
         pass
+
 
 
 

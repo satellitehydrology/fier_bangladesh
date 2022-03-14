@@ -10,6 +10,11 @@ import matplotlib.colors
 
 root_output_folder = 'Bangladesh/'
 
+def colorize(array, cmap='viridis'):
+    normed_data = (array - array.min()) / (array.max() - array.min())
+    cm = plt.cm.get_cmap(cmap)
+    return cm(normed_data)
+
 def tpc_predict(site, mode, value):
     tpc_mode = 'TF_model/site-%s_tpc%s'%(str(site), str(mode).zfill(2))
 
@@ -71,7 +76,8 @@ def image_output(site, value):
         os.makedirs(folder_name)
         sar_image, z_score_image, water_map_image = synthesize_sar(site, round(value,3))
 
-        fig = plt.imshow(sar_image, cmap='gray')
+        fig = plt.figure()
+        plt.imshow(sar_image, cmap='gray')
         plt.axis('off')
         plt.savefig(folder_name +'/syn_sar.png', bbox_inches='tight', dpi=300, pad_inches = 0)
         plt.close()
@@ -81,15 +87,16 @@ def image_output(site, value):
         plt.savefig(folder_name +'/z_score.png', bbox_inches='tight', dpi=300, pad_inches = 0)
         print('Created', folder_name)
         plt.close()
-        
+
         water_cmap =  matplotlib.colors.ListedColormap(["silver","darkblue"])
-        #water_cmap.set_bad('silver')
+        # water_cmap.set_bad('w', 0.001)
         fig = plt.imshow(water_map_image, cmap = water_cmap)
         #plt.clim(vmin=0, vmax=1)
         plt.axis('off')
         plt.savefig(folder_name +'/water_map.png', bbox_inches='tight', dpi=300, interpolation='None', pad_inches = 0)
+        plt.close()
         #plt.show()
-        
+
         # Make nc file:
         all_meanVV_dir = 'stats_img/%s/all_meanVV.nc'%(site)
         all_meanVV = xr.open_dataset(root_output_folder + all_meanVV_dir)
