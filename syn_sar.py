@@ -77,6 +77,7 @@ def image_output(site, value):
         plt.close()
 
         fig = plt.imshow(z_score_image, cmap='jet', vmin=-3, vmax=3, interpolation='None')
+        plt.axis('off')
         plt.savefig(folder_name +'/z_score.png', bbox_inches='tight', dpi=300, pad_inches = 0)
         print('Created', folder_name)
         plt.close()
